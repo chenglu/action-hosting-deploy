@@ -84,19 +84,23 @@ export function getURLsMarkdownFromChannelDeployResult(
 export function getChannelDeploySuccessComment(
   result: ChannelSuccessResult,
   commit: string,
-  changedFilesMarkdown: string  // 新增参数
+  changedFilesMarkdown: string[]
 ) {
   const deploySignature = createDeploySignature(result);
   const urlList = getURLsMarkdownFromChannelDeployResult(result);
   const { expireTime } = interpretChannelDeployResult(result);
+
+  const changedFilesWithUrls = changedFilesMarkdown.map((file) => {
+    return `${urlList}\n${file}`;
+  }).join("\n");
 
   return `
 Visit the preview URL for this PR (updated for commit ${commit}):
 
 ${urlList}
 
-### Changed Files:
-${changedFilesMarkdown}  // 添加变更文件列表
+### Changed Details:
+${changedFilesWithUrls}
 
 <sub>(expires ${new Date(expireTime).toUTCString()})</sub>
 
@@ -119,9 +123,9 @@ export async function postChannelSuccessComment(
 
   const fileChanges = await getChangedFilesByPullRequestNumber(pullRequestNumber);
  // export fileChanges to markdown
-  const changedFilesMarkdown = fileChanges.map((file) => `- ${file}`).join("\n");
+  // const changedFilesMarkdown = fileChanges.map((file) => `- ${file}`).join("\n");
 
-  const commentMarkdown = getChannelDeploySuccessComment(result, commit, changedFilesMarkdown);
+  const commentMarkdown = getChannelDeploySuccessComment(result, commit, fileChanges);
 
   const comment = {
     ...commentInfo,
