@@ -36,7 +36,7 @@ const BOT_SIGNATURE = "showDetailedUrls: " + showDetailedUrls + "\n" + "pullRequ
 const token = process.env.GITHUB_TOKEN || getInput("repoToken");
 const octokit = token ? getOctokit(token) : undefined;
 
-export async function getChangedFilesByPullRequestNumber(pullRequestNumber: number): Promise<string[]> {
+export async function getChangedFilesByPullRequestNumber(octokit: Octokit, pullRequestNumber: number): Promise<string[]> {
   const { data: files } = await octokit.rest.pulls.listFiles({
     ...context.repo,
     pull_number: pullRequestNumber,
