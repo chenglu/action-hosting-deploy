@@ -33,9 +33,6 @@ const fileExtension = getInput("fileExtension") || "md, html";
 const originalPath = getInput("originalPath") || "src";
 const replacedPath = getInput("replacedPath") || "docs";
 
-const pullRequest = context.payload.pull_request;
-const pullRequestNumber = pullRequest.number;
-
 const BOT_SIGNATURE = "[本工具](https://github.com/cfug/doc-site-preview-in-pr) 修改自 [部署至 🔥 Firebase Hosting](https://github.com/marketplace/actions/deploy-to-firebase-hosting)。";
 
 export async function getChangedFilesByPullRequestNumber(pullRequestNumber: number): Promise<string[]> {
@@ -144,6 +141,8 @@ export async function postChannelSuccessComment(
     ...context.repo,
     issue_number: context.issue.number,
   };
+  const pullRequest = context.payload.pull_request;
+  const pullRequestNumber = pullRequest.number;
 
   const changedFiles = await getChangedFilesByPullRequestNumber(pullRequestNumber);
 
