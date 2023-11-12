@@ -24,15 +24,27 @@ import {
 } from "./deploy";
 import { createDeploySignature } from "./hash";
 import { getInput } from "@actions/core";
-import { context } from "@actions/github";
-import { getOctokit } from "@actions/github";
 import { Octokit } from "@octokit/rest";
+import { context, getOctokit } from "@actions/github";
 
 const showDetailedUrls = getInput("showDetailedUrls");
 // const octokit = getOctokit(process.env.GITHUB_TOKEN);
 const pullRequest = context.payload.pull_request;
 const pullRequestNumber = pullRequest.number;
-const BOT_SIGNATURE = "showDetailedUrls: " + showDetailedUrls; 
+const BOT_SIGNATURE = "showDetailedUrls: " + showDetailedUrls + "\n" + "pullRequestNumber: " + pullRequestNumber;"\n" + "getChangedFilesByPullRequestNumber" + getChangedFilesByPullRequestNumber(pullRequestNumber);
+
+const token = process.env.GITHUB_TOKEN || getInput("repoToken");
+const octokit = token ? getOctokit(token) : undefined;
+
+export async function getChangedFilesByPullRequestNumber(pullRequestNumber: number): Promise<string[]> {
+  const { data: files } = await octokit.rest.pulls.listFiles({
+    ...context.repo,
+    pull_number: pullRequestNumber,
+  });
+  return files.map((file) => file.filename);
+}
+
+// changedFilesMarkdown = getChangedFilesMarkdown(pullRequestNumber);
 
 export function createBotCommentIdentifier(signature: string) {
   return function isCommentByBot(comment): boolean {
@@ -86,7 +98,6 @@ export async function postChannelSuccessComment(
     issue_number: context.issue.number,
   };
 
-  
   const commentMarkdown = getChannelDeploySuccessComment(result, commit, changedFilesMarkdown);
 
   const comment = {
