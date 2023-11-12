@@ -31,7 +31,7 @@ import { context, getOctokit } from "@actions/github";
 const showDetailedUrls = getInput("showDetailedUrls");
 const fileExtension = getInput("fileExtension") || "md, html";
 const originalPath = getInput("originalPath") || "_site/";
-const replacedPath = getInput("replacedPath") || "/public/";
+const replacedPath = getInput("replacedPath") || "/";
 
 
 const pullRequest = context.payload.pull_request;
@@ -91,7 +91,7 @@ export function getChannelDeploySuccessComment(
   const { expireTime } = interpretChannelDeployResult(result);
 
   const changedFilesWithUrls = changedFilesMarkdown.map((file) => {
-    return `${urlList}\n${file}`;
+    return `${urlList}${file}`;
   }).join("\n");
 
   return `
