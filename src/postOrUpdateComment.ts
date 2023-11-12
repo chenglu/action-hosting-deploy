@@ -26,9 +26,10 @@ import { createDeploySignature } from "./hash";
 import { getInput } from "@actions/core";
 import { context } from "@actions/github";
 import { getOctokit } from "@actions/github";
+import { Octokit } from "@octokit/rest";
 
 const showDetailedUrls = getInput("showDetailedUrls");
-const octokit = getOctokit(process.env.GITHUB_TOKEN);
+// const octokit = getOctokit(process.env.GITHUB_TOKEN);
 const pullRequest = context.payload.pull_request;
 const pullRequestNumber = pullRequest.number;
 const BOT_SIGNATURE = "showDetailedUrls: " + showDetailedUrls; 
