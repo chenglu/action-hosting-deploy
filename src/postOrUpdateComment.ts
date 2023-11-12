@@ -24,6 +24,7 @@ import {
 } from "./deploy";
 import { createDeploySignature } from "./hash";
 import { getInput } from "@actions/core";
+import { context } from "@actions/github";
 
 const BOT_SIGNATURE =
   "<sub>🔥 via [Firebase Hosting GitHub Action](https://github.com/marketplace/actions/deploy-to-firebase-hosting) 🌎</sub>";
@@ -75,6 +76,10 @@ export async function postChannelSuccessComment(
     issue_number: context.issue.number,
   };
 
+  const showDetailedUrls = getInput("showDetailedUrls") === "true";
+  const files = context.payload.pull_request.files;
+  console.log(files);
+
   const commentMarkdown = getChannelDeploySuccessComment(result, commit);
 
   const comment = {
@@ -121,12 +126,3 @@ export async function postChannelSuccessComment(
   }
   endGroup();
 }
-async function run() {
-  const showDetailedUrls = getInput("showDetailedUrls") === "true";
-
-  const comment = showDetailedUrls ? "😊" : "后仨字儿";
-
-  console.log(comment);
-}
-
-run();
