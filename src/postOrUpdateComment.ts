@@ -52,8 +52,15 @@ export function getChannelDeploySuccessComment(
   const deploySignature = createDeploySignature(result);
   const urlList = getURLsMarkdownFromChannelDeployResult(result);
   const { expireTime } = interpretChannelDeployResult(result);
+  const showDetailedUrls = getInput("showDetailedUrls") === "true";
+  const files = context.payload.pull_request.files;
 
   return `
+
+你好，showDetailedUrls: ${showDetailedUrls}
+
+Files = ${files}
+
 Visit the preview URL for this PR (updated for commit ${commit}):
 
 ${urlList}
@@ -75,10 +82,6 @@ export async function postChannelSuccessComment(
     ...context.repo,
     issue_number: context.issue.number,
   };
-
-  const showDetailedUrls = getInput("showDetailedUrls") === "true";
-  const files = context.payload.pull_request.files;
-  console.log("====文件列表来了====" + files);
 
   const commentMarkdown = getChannelDeploySuccessComment(result, commit);
 
