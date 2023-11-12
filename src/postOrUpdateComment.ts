@@ -27,8 +27,10 @@ import { getInput } from "@actions/core";
 import { Octokit } from "@octokit/rest";
 import { context, getOctokit } from "@actions/github";
 
+// Get inputs from workflow file
 const showDetailedUrls = getInput("showDetailedUrls");
-// const octokit = getOctokit(process.env.GITHUB_TOKEN);
+const fileExtension = getInput("fileExtension") || "md, html";
+
 const pullRequest = context.payload.pull_request;
 const pullRequestNumber = pullRequest.number;
 
@@ -42,7 +44,13 @@ export async function getChangedFilesByPullRequestNumber(pullRequestNumber: numb
     ...context.repo,
     pull_number: pullRequestNumber,
   });
-  return files.map((file) => file.filename);
+  const fileExtensions = fileExtension.split(",").map((ext) => ext.trim());  // 过滤空格
+  return files
+    .filter((file) => {
+      const extension = file.filename.split(".").pop();
+      return fileExtensions.includes(extension);
+    })
+    .map((file) => file.filename);
 }
 
 // changedFilesMarkdown = getChangedFilesMarkdown(pullRequestNumber);

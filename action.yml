@@ -66,6 +66,13 @@ inputs:
       Show the updated urls after the deployment.
     default: false
     required: false
+  # Add a file extension filter set to keep the undertacked files shows on the detailed urls.
+  # Default to md and html
+  fileExtensionFilter:
+    description: >-
+      The file extension filter set to keep the undertacked files shows on the detailed urls.
+    default: "md, html"
+    required: false
 outputs:
   urls:
     description: The url(s) deployed to

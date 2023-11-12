@@ -50,8 +50,10 @@ const octokit = token ? getOctokit(token) : undefined;
 const entryPoint = getInput("entryPoint");
 const target = getInput("target");
 const firebaseToolsVersion = getInput("firebaseToolsVersion");
-// Adding: get showDetailedUrls from input, default to true
+// Adding: get showDetailedUrls from input, default to false
 const showDetailedUrls = getInput("showDetailedUrls") !== "false";
+// Adding: get FileExtension from input, default to .md and .html
+const fileExtension = getInput("fileExtension") || "md, html";
 
 async function run() {
   const isPullRequest = !!context.payload.pull_request;
