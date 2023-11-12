@@ -27,10 +27,10 @@ import { getInput } from "@actions/core";
 import { context } from "@actions/github";
 
 const showDetailedUrls = getInput("showDetailedUrls") === "true";
-const files = context.payload.pull_request.files;
+const pull_request_number = context.payload.pull_request.number.toString();
 
-const BOT_SIGNATURE =
-  "Bot 签名: showDetailedUrls=" + showDetailedUrls + "，files=" + files;
+const BOT_SIGNATURE = "pull_request_number: " + pull_request_number;
+  // "<sub>🔥 via [Firebase Hosting GitHub Action](https://github.com/marketplace/actions/deploy-to-firebase-hosting) 🌎</sub>";
 
 export function createBotCommentIdentifier(signature: string) {
   return function isCommentByBot(comment): boolean {
