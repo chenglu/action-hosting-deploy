@@ -81,13 +81,20 @@ export function getURLsMarkdownFromChannelDeployResult(
     : urls.map((url) => `- [${url}](${url})`).join("\n");
 }
 
+export function getURLsFromChannelDeployResult(
+  result: ChannelSuccessResult
+): string[] {
+  const { urls } = interpretChannelDeployResult(result);
+  return urls;
+}
+
 export function getChannelDeploySuccessComment(
   result: ChannelSuccessResult,
   commit: string,
   changedFilesMarkdown: string[]
 ) {
   const deploySignature = createDeploySignature(result);
-  const urlList = getURLsMarkdownFromChannelDeployResult(result);
+  const urlList = getURLsFromChannelDeployResult(result);
   const { expireTime } = interpretChannelDeployResult(result);
 
   const changedFilesWithUrls = changedFilesMarkdown.map((file) => {
