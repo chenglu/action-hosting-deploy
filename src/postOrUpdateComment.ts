@@ -30,6 +30,9 @@ import { context, getOctokit } from "@actions/github";
 // Get inputs from workflow file
 const showDetailedUrls = getInput("showDetailedUrls");
 const fileExtension = getInput("fileExtension") || "md, html";
+const originalPath = getInput("originalPath") || "_site/";
+const replacedPath = getInput("replacedPath") || "/public/";
+
 
 const pullRequest = context.payload.pull_request;
 const pullRequestNumber = pullRequest.number;
@@ -45,12 +48,19 @@ export async function getChangedFilesByPullRequestNumber(pullRequestNumber: numb
     pull_number: pullRequestNumber,
   });
   const fileExtensions = fileExtension.split(",").map((ext) => ext.trim());  // 过滤空格
-  return files
+  const prChangedFiles = files
     .filter((file) => {
       const extension = file.filename.split(".").pop();
       return fileExtensions.includes(extension);
     })
     .map((file) => file.filename);
+
+  const replacedPathRegex = new RegExp(`^${originalPath}`);
+  const prChangedFilesWithCustomizedPath = prChangedFiles.map((filePath) => {
+    return filePath.replace(replacedPathRegex, replacedPath);
+  });
+
+  return prChangedFilesWithCustomizedPath;
 }
 
 // changedFilesMarkdown = getChangedFilesMarkdown(pullRequestNumber);

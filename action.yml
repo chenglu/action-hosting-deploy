@@ -73,6 +73,19 @@ inputs:
       The file extension filter set to keep the undertacked files shows on the detailed urls.
     default: "md, html"
     required: false
+  # Add a cusomized path replacement to replace the path in the detailed urls.
+  # Like: _site/ to /public/
+  originalPath:
+    description: >-
+      The original path to be replaced in the detailed urls.
+    default: "_site/"
+    required: false
+  replacedPath:
+    description: >-
+      The replaced path in the detailed urls.
+    default: "/public/"
+    required: false
+
 outputs:
   urls:
     description: The url(s) deployed to
