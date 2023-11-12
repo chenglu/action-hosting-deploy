@@ -78,7 +78,7 @@ export async function postChannelSuccessComment(
 
   const showDetailedUrls = getInput("showDetailedUrls") === "true";
   const files = context.payload.pull_request.files;
-  console.log(files);
+  console.log("====文件列表来了====" + files);
 
   const commentMarkdown = getChannelDeploySuccessComment(result, commit);
 
