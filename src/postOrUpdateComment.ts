@@ -25,12 +25,23 @@ import {
 import { createDeploySignature } from "./hash";
 import { getInput } from "@actions/core";
 import { context } from "@actions/github";
+import { getOctokit } from "@actions/github";
 
 const showDetailedUrls = getInput("showDetailedUrls") === "true";
-const pull_request_number = context.payload.pull_request.number.toString();
+// const pull_request_number = context.payload.pull_request.html_url;
 
-const BOT_SIGNATURE = "pull_request_number: " + pull_request_number;
-  // "<sub>🔥 via [Firebase Hosting GitHub Action](https://github.com/marketplace/actions/deploy-to-firebase-hosting) 🌎</sub>";
+const octokit = getOctokit(process.env.GITHUB_TOKEN);
+
+const pullRequest = context.payload.pull_request;
+const pullRequestNumber = pullRequest.number;
+
+const fileName = octokit.rest.pulls.listFiles({
+  owner: context.repo.owner,
+  repo: context.repo.repo,
+  pull_number: pullRequestNumber,
+});
+
+const BOT_SIGNATURE = "fileName: " + fileName + "showDetailedUrls: " + showDetailedUrls; 
 
 export function createBotCommentIdentifier(signature: string) {
   return function isCommentByBot(comment): boolean {
@@ -125,3 +136,4 @@ export async function postChannelSuccessComment(
   }
   endGroup();
 }
+
