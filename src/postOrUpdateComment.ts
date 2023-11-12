@@ -94,7 +94,7 @@ export function getChannelDeploySuccessComment(
   const { expireTime } = interpretChannelDeployResult(result);
 
   const changedFilesWithUrls = changedFiles.map((file) => {
-    return `- [${urlList}${file}](${urlList}${file})`;
+    return `[${urlList}/${file}](${urlList}/${file})`;
   }).join("\n");
 
   const expireTimeInChina = new Date(expireTime).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
