@@ -31,7 +31,7 @@ const showDetailedUrls = getInput("showDetailedUrls");
 // const octokit = getOctokit(process.env.GITHUB_TOKEN);
 const pullRequest = context.payload.pull_request;
 const pullRequestNumber = pullRequest.number;
-const BOT_SIGNATURE = "showDetailedUrls: " + showDetailedUrls + "\n" + "pullRequestNumber: " + pullRequestNumber;"\n" + "getChangedFilesByPullRequestNumber" + getChangedFilesByPullRequestNumber(pullRequestNumber);
+const BOT_SIGNATURE = "showDetailedUrls: " + showDetailedUrls + "\n" + "pullRequestNumber: " + pullRequestNumber + "\n" + "getChangedFilesByPullRequestNumber" + getChangedFilesByPullRequestNumber(pullRequestNumber);
 
 export async function getChangedFilesByPullRequestNumber(pullRequestNumber: number): Promise<string[]> {
   const token = process.env.GITHUB_TOKEN || getInput("repoToken");
