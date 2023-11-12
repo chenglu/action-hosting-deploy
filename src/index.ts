@@ -50,6 +50,8 @@ const octokit = token ? getOctokit(token) : undefined;
 const entryPoint = getInput("entryPoint");
 const target = getInput("target");
 const firebaseToolsVersion = getInput("firebaseToolsVersion");
+// Adding: get showDetailedUrls from input, default to true
+const showDetailedUrls = getInput("showDetailedUrls") !== "false";
 
 async function run() {
   const isPullRequest = !!context.payload.pull_request;

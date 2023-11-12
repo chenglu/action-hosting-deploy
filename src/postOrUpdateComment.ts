@@ -23,6 +23,7 @@ import {
   ErrorResult,
 } from "./deploy";
 import { createDeploySignature } from "./hash";
+import { getInput } from "@actions/core";
 
 const BOT_SIGNATURE =
   "<sub>🔥 via [Firebase Hosting GitHub Action](https://github.com/marketplace/actions/deploy-to-firebase-hosting) 🌎</sub>";
@@ -120,3 +121,12 @@ export async function postChannelSuccessComment(
   }
   endGroup();
 }
+async function run() {
+  const showDetailedUrls = getInput("showDetailedUrls") === "true";
+
+  const comment = showDetailedUrls ? "😊" : "后仨字儿";
+
+  console.log(comment);
+}
+
+run();

@@ -59,6 +59,13 @@ inputs:
       The version of firebase-tools to use. Defaults to `latest`.
     default: latest
     required: false
+  # Add a new parameter means wether the user need to see the updated urls
+  # after the deployment.
+  showDetailedUrls:
+    description: >-
+      Show the updated urls after the deployment.
+    default: false
+    required: false
 outputs:
   urls:
     description: The url(s) deployed to
