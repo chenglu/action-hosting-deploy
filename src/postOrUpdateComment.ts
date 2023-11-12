@@ -26,8 +26,11 @@ import { createDeploySignature } from "./hash";
 import { getInput } from "@actions/core";
 import { context } from "@actions/github";
 
+const showDetailedUrls = getInput("showDetailedUrls") === "true";
+const files = context.payload.pull_request.files;
+
 const BOT_SIGNATURE =
-  "<sub>🔥 via [Firebase Hosting GitHub Action](https://github.com/marketplace/actions/deploy-to-firebase-hosting) 🌎</sub>";
+  "Bot 签名: showDetailedUrls=" + showDetailedUrls + "，files=" + files;
 
 export function createBotCommentIdentifier(signature: string) {
   return function isCommentByBot(comment): boolean {
@@ -52,15 +55,8 @@ export function getChannelDeploySuccessComment(
   const deploySignature = createDeploySignature(result);
   const urlList = getURLsMarkdownFromChannelDeployResult(result);
   const { expireTime } = interpretChannelDeployResult(result);
-  const showDetailedUrls = getInput("showDetailedUrls") === "true";
-  const files = context.payload.pull_request.files;
 
   return `
-
-你好，showDetailedUrls: ${showDetailedUrls}
-
-Files = ${files}
-
 Visit the preview URL for this PR (updated for commit ${commit}):
 
 ${urlList}
