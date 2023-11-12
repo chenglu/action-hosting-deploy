@@ -31,7 +31,9 @@ const showDetailedUrls = getInput("showDetailedUrls");
 // const octokit = getOctokit(process.env.GITHUB_TOKEN);
 const pullRequest = context.payload.pull_request;
 const pullRequestNumber = pullRequest.number;
-const BOT_SIGNATURE = "showDetailedUrls: " + showDetailedUrls + "\n" + "pullRequestNumber: " + pullRequestNumber + "\n" + "getChangedFilesByPullRequestNumber" + getChangedFilesByPullRequestNumber(pullRequestNumber);
+
+const BOT_SIGNATURE = "showDetailedUrls: " + showDetailedUrls + "\n" + "pullRequestNumber: " 
+                      + pullRequestNumber + "\n" + "getChangedFilesByPullRequestNumber";
 
 export async function getChangedFilesByPullRequestNumber(pullRequestNumber: number): Promise<string[]> {
   const token = process.env.GITHUB_TOKEN || getInput("repoToken");
@@ -90,12 +92,16 @@ export async function postChannelSuccessComment(
   context: Context,
   result: ChannelSuccessResult,
   commit: string,
-  changedFilesMarkdown: string  // 新增参数
+  // changedFilesMarkdown: string  // 新增参数
 ) {
   const commentInfo = {
     ...context.repo,
     issue_number: context.issue.number,
   };
+
+  const fileChanges = await getChangedFilesByPullRequestNumber(pullRequestNumber);
+ // export fileChanges to markdown
+  const changedFilesMarkdown = fileChanges.map((file) => `- ${file}`).join("\n");
 
   const commentMarkdown = getChannelDeploySuccessComment(result, commit, changedFilesMarkdown);
 
