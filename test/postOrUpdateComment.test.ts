@@ -17,7 +17,8 @@ describe("postOrUpdateComment", () => {
   it("Creates the expected comment for a single site", () => {
     const comment = getChannelDeploySuccessComment(
       channelSingleSiteSuccess,
-      "fe211ff"
+      "fe211ff",
+      []
     );
 
     expect(comment).toEqual(singleSiteComment);
@@ -26,7 +27,8 @@ describe("postOrUpdateComment", () => {
   it("Creates the expected comment for multisite", () => {
     const comment = getChannelDeploySuccessComment(
       channelMultiSiteSuccess,
-      "fe211ff"
+      "fe211ff",
+      []
     );
 
     expect(comment).toEqual(multiSiteComment);
