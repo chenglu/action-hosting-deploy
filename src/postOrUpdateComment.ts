@@ -29,16 +29,14 @@ import { context, getOctokit } from "@actions/github";
 
 // Get inputs from workflow file
 const showDetailedUrls = getInput("showDetailedUrls");
-const fileExtension = getInput("fileExtension") || "md, html";
-const originalPath = getInput("originalPath") || "_site/";
-const replacedPath = getInput("replacedPath") || "/";
-
+const fileExtension = getInput("fileExtension");
+const originalPath = getInput("originalPath");
+const replacedPath = getInput("replacedPath");
 
 const pullRequest = context.payload.pull_request;
 const pullRequestNumber = pullRequest.number;
 
-const BOT_SIGNATURE = "showDetailedUrls: " + showDetailedUrls + "\n" + "pullRequestNumber: " 
-                      + pullRequestNumber + "\n" + "getChangedFilesByPullRequestNumber";
+const BOT_SIGNATURE = "[本工具](https://github.com/cfug/doc-site-preview-in-pr) 修改自 [部署至 🔥 Firebase Hosting](https://github.com/marketplace/actions/deploy-to-firebase-hosting)";
 
 export async function getChangedFilesByPullRequestNumber(pullRequestNumber: number): Promise<string[]> {
   const token = process.env.GITHUB_TOKEN || getInput("repoToken");
@@ -101,15 +99,20 @@ export function getChannelDeploySuccessComment(
     return `${urlList}${file}`;
   }).join("\n");
 
+  const expireTimeInChina = new Date(expireTime).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+  const formattedExpireTime = `${expireTimeInChina} (北京时间)`;
+
   return `
-Visit the preview URL for this PR (updated for commit ${commit}):
+👍 感谢你对 Flutter / Dart 文档本地化做出的贡献！\n 
+
+查看该 PR 的预览 URL (已更新至 ${commit})：
 
 ${urlList}
 
-### Changed Details:
+### 查看本 PR 的修改文件:
 ${changedFilesWithUrls}
 
-<sub>(expires ${new Date(expireTime).toUTCString()})</sub>
+<sub>(页面失效时间 ${formattedExpireTime})</sub>
 
 ${BOT_SIGNATURE}
 
@@ -120,8 +123,7 @@ export async function postChannelSuccessComment(
   github: InstanceType<typeof GitHub>,
   context: Context,
   result: ChannelSuccessResult,
-  commit: string,
-  // changedFilesMarkdown: string  // 新增参数
+  commit: string
 ) {
   const commentInfo = {
     ...context.repo,
@@ -129,8 +131,6 @@ export async function postChannelSuccessComment(
   };
 
   const fileChanges = await getChangedFilesByPullRequestNumber(pullRequestNumber);
- // export fileChanges to markdown
-  // const changedFilesMarkdown = fileChanges.map((file) => `- ${file}`).join("\n");
 
   const commentMarkdown = getChannelDeploySuccessComment(result, commit, fileChanges);
 
